@@ -1,5 +1,5 @@
 import unittest
-from solution import Solution
+from solutions.running_sum import Solution
 
 class TestRunningSum(unittest.TestCase):
     def setUp(self):

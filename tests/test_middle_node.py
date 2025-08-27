@@ -1,6 +1,6 @@
 import unittest
 from solutions.middle_node import Solution
-from utils.linked_list import build_linked_list, linked_list_to_list
+from ..utils.linked_list import build_linked_list, linked_list_to_list
 
 class TestMiddleNode(unittest.TestCase):
     def setUp(self):
