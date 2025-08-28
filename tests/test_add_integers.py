@@ -1,6 +1,10 @@
 import unittest
 from solutions.add_integers import Solution
 
+class Solution:
+    def add(self, a: int, b: int) -> int:
+        return a + b
+
 class TestAddIntegers(unittest.TestCase):
 
     def setUp(self):

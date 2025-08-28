@@ -1,29 +1,87 @@
-import unittest
+import pytest
 from solutions.maximum_wealth import Solution
 
-class TestMaximumWealth(unittest.TestCase):
-    def setUp(self):
-        self.s = Solution()
+@pytest.mark.parametrize(
+    "accounts,expected",
+    [
+        # Happy path: multiple customers, typical values
+        ([[1, 2, 3], [3, 2, 1]], 6),
+        # Happy path: single customer
+        ([[10, 20, 30]], 60),
+        # Happy path: multiple customers, different balances
+        ([[1, 5], [7, 3], [3, 5]], 10),
+        # Edge case: empty accounts list
+        ([], 0),
+        # Edge case: all customers have zero balances
+        ([[0, 0, 0], [0, 0, 0]], 0),
+        # Edge case: one customer, all zero
+        ([[0, 0, 0]], 0),
+        # Edge case: customer with negative balances (if allowed)
+        ([[-1, -2, -3], [-4, -5, -6]], -6),
+        # Edge case: mix of positive and negative balances
+        ([[1, -2, 3], [4, -5, 6]], 7),
+        # Edge case: single account per customer
+        ([[5], [10], [3]], 10),
+        # Edge case: very large numbers
+        ([[10**6, 10**6], [2*10**6]], 2*10**6),
+        # Edge case: customer with empty account list
+        ([[], [1, 2, 3]], 6),
+        # Edge case: all customers with empty account lists
+        ([[], [], []], 0),
+    ],
+    ids=[
+        "two_customers_typical",
+        "single_customer",
+        "three_customers_varied",
+        "empty_accounts",
+        "all_zero_balances",
+        "one_customer_all_zero",
+        "negative_balances",
+        "mixed_positive_negative",
+        "single_account_per_customer",
+        "very_large_numbers",
+        "customer_with_empty_account",
+        "all_customers_empty_accounts",
+    ]
+)
+def test_maximum_wealth_happy_and_edge_cases(accounts, expected):
 
-    def test_example1(self):
-        accounts = [[1,2,3],[3,2,1]]
-        self.assertEqual(self.s.maximumWealth(accounts), 6)
+    # Arrange
+    solution = Solution()
 
-    def test_example2(self):
-        accounts = [[1,5],[7,3],[3,5]]
-        self.assertEqual(self.s.maximumWealth(accounts), 10)
+    # Act
+    result = solution.maximumWealth(accounts)
 
-    def test_example3(self):
-        accounts = [[2,8,7],[7,1,3],[1,9,5]]
-        self.assertEqual(self.s.maximumWealth(accounts), 17)
+    # Assert
+    assert result == expected
 
-    def test_single_customer(self):
-        accounts = [[100,200,300]]
-        self.assertEqual(self.s.maximumWealth(accounts), 600)
+@pytest.mark.parametrize(
+    "accounts,expected_exception",
+    [
+        # Error case: None as input
+        (None, TypeError),
+        # Error case: accounts is not a list
+        ("not a list", TypeError),
+        # Error case: account contains non-iterable
+        ([1, 2, 3], TypeError),
+        # Error case: account contains non-numeric values
+        ([["a", "b", "c"]], TypeError),
+        # Error case: account contains None
+        ([[None, 1, 2]], TypeError),
+    ],
+    ids=[
+        "input_none",
+        "input_not_list",
+        "account_not_iterable",
+        "account_non_numeric",
+        "account_contains_none",
+    ]
+)
+def test_maximum_wealth_error_cases(accounts, expected_exception):
 
-    def test_empty_accounts(self):
-        accounts = [[]]
-        self.assertEqual(self.s.maximumWealth(accounts), 0)
+    # Arrange
+    solution = Solution()
 
-if __name__ == "__main__":
-    unittest.main()
+    # Act & Assert
+    with pytest.raises(expected_exception):
+        solution.maximumWealth(accounts)
